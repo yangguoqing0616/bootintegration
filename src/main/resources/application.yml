@@ -1,0 +1,54 @@
+
+spring:
+  profiles:
+    active: dev
+  datasource:
+    ##连接池最大空闲，已经不采用
+    ##spring.datasource.maxIdle=30
+    ##连接池最小空闲3
+    minIdle: 20
+    ##连接池最大使用连接数量30
+    maxActive: 100
+    initialSize: 10
+    ##获取连接最大等待时间，单位是毫秒
+    maxWait: 60000
+    ##配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    ##配置一个连接在池中最小生存的时间，单位是毫秒
+    minEvictableIdleTimeMillis: 300000
+    maxEvictableIdleTimeMillis: 600000
+    ##验证查询    
+    validationQuery: SELECT 1 
+    #单位：秒，检测连接是否有效的超时时间
+    validationQueryTimeout: 90
+    #连接泄露检查，打开removeAbandoned功能，超过时间限制是否回收 
+    removeAbandoned: true
+    ##超时时间；单位为秒。180秒=3分钟
+    removeAbandonedTimeout: 180
+    ##关闭abanded连接时输出错误日志
+    logAbandoned: true
+    #建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。
+    testWhileIdle: true
+    #申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+    testOnBorrow: false
+    #归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+    testOnReturn: false
+    #是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql下建议关闭。
+    poolPreparedStatements: true
+    #要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。在Druid中，不会存在Oracle下PSCache占用内存过多的问题，可以把这个数值配置大一些，比如说100
+    maxPoolPreparedStatementPerConnectionSize: 100
+    #属性类型是字符串，通过别名的方式配置扩展插件，常用的插件有：监控统计用的filter:stat 日志用的filter:log4j 防御sql注入的filter:wall
+    filters: stat 
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000 # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+    useGlobalDataSourceStat: true # 合并多个DruidDataSource的监控数据
+    asyncInit: true
+    # 打开后，增强timeBetweenEvictionRunsMillis的周期性连接检查，minIdle内的空闲连接，每次检查强制验证连接有效性
+    #keepAlive: true
+server:
+  port: 9090
+
+mybatis:
+  # 指定全局配置文件位置
+  config-location: classpath:mybatis/mybatis-config.xml
+  # 指定sql映射文件位置
+  mapper-locations: classpath:mybatis/mapper/*.xml

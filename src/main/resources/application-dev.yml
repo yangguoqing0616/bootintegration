@@ -1,0 +1,8 @@
+###############开发环境#############
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:mysql://10.3.2.17:3306/guigu?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: admin
+    driver-class-name: com.mysql.jdbc.Driver
