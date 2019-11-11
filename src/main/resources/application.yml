@@ -52,3 +52,16 @@ mybatis:
   config-location: classpath:mybatis/mybatis-config.xml
   # 指定sql映射文件位置
   mapper-locations: classpath:mybatis/mapper/*.xml
+
+redis:
+  database: 0
+  timeout: 0
+  pool:
+    maxTotal: 5000 #最大连接数
+    maxIdle: 30 #最大空闲连接数
+    minIdle: 5 #最小空闲连接数
+    maxWait: 3000  #获取连接最大等待时间 ms  #default -1
+  cluster:
+    nodes: 10.3.2.39:7000,10.3.2.39:7001,10.3.2.39:7002,10.3.2.38:7003,10.3.2.38:7004,10.3.2.38:7005
+    timeout: 30000 #连接server超时时间
+    redirects: 5
