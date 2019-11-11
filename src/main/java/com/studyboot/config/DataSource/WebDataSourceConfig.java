@@ -31,7 +31,8 @@ public class WebDataSourceConfig {
 	private String password;
 	@Value("${spring.datasource.url}")
 	private String url;
-	
+
+	//数据源注册方式一
 	@Bean(name = "webDataSource")
 	@Primary
     public DataSource setDataSource() {
@@ -43,6 +44,15 @@ public class WebDataSourceConfig {
         dataSource.setPassword(password);
         return dataSource;
     }
+
+
+    //数据源注册方式二
+   /* @ConfigurationProperties(prefix = "spring.datasource")
+    @Bean(name = "webDataSource")
+    @Primary
+    public DataSource druid(){
+        return  new DruidDataSource();
+    }*/
 
     @Bean(name = "webTransactionManager")
     @Primary
