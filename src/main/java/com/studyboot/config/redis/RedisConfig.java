@@ -2,8 +2,6 @@ package com.studyboot.config.redis;
 
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,8 +15,6 @@ import java.util.List;
 import java.util.Set;
 
 @Configuration
-@AutoConfigureAfter(RedisClusterConfig.class)
-@EnableAutoConfiguration
 public class RedisConfig {
 
 
