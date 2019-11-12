@@ -16,12 +16,12 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisTemplateConfig {
 
 
-    @Bean(name = "template")
-    public RedisTemplate<String, Object> template(RedisConnectionFactory factory) {
+    @Bean(name = "redisTemplate")
+    public RedisTemplate<String, Object> template(RedisConnectionFactory jedisConnectionFactory) {
         // 创建RedisTemplate<String, Object>对象
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         // 配置连接工厂
-        template.setConnectionFactory(factory);
+        template.setConnectionFactory(jedisConnectionFactory);
 
         ObjectMapper om = new ObjectMapper();
         // 定义Jackson2JsonRedisSerializer序列化对象
@@ -46,14 +46,14 @@ public class RedisTemplateConfig {
 
     /**
      * 重新实现StringRedisTmeplate：键值都是String的的数据
-     * @param redisConnectionFactory
+     * @param jedisConnectionFactory
      * @return
      */
     @Bean
-    public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory jedisConnectionFactory) {
         StringRedisTemplate template = new StringRedisTemplate();
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-        template.setConnectionFactory(redisConnectionFactory);
+        template.setConnectionFactory(jedisConnectionFactory);
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         // key采用String的序列化方式
         template.setKeySerializer(stringRedisSerializer);

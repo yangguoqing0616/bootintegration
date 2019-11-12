@@ -22,43 +22,42 @@ import java.util.Set;
 public class RedisConfig {
 
 
-	@Autowired
-	private RedisClusterConfig redisClusterConfig;
+    @Autowired
+    private RedisClusterConfig redisClusterConfig;
 
-	@Bean
-	@ConfigurationProperties(prefix = "spring.redis.pool")
-	public JedisPoolConfig getRedisConfig() {
-		JedisPoolConfig config = new JedisPoolConfig();
-		return config;
-	}
-	
+    @Bean
+    @ConfigurationProperties(prefix = "spring.redis.pool")
+    public JedisPoolConfig getRedisConfig() {
+        JedisPoolConfig config = new JedisPoolConfig();
+        return config;
+    }
 
-	
-	/**
-	 * 配置 Redis Cluster 信息
-	 */
-	@Bean
-	public RedisClusterConfiguration getJedisCluster() {
-		RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration();
-		redisClusterConfiguration.setMaxRedirects(getRedisConfig().getMaxTotal());
-		List<RedisNode> nodeList = Lists.newArrayList();
-		Set<HostAndPort> nodes = redisClusterConfig.getRedisNods();
-		for (HostAndPort node : nodes) {
-			nodeList.add(new RedisNode(node.getHost(), node.getPort()));
-		}
-		redisClusterConfiguration.setClusterNodes(nodeList);
-		return redisClusterConfiguration;
-	}
 
-	/**
-	 * 配置 Redis 连接工厂
-	 */
-	@Bean(name = "jedisConnectionFactory")
-	public JedisConnectionFactory getJedisConnectionFactory() {
-		JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(getJedisCluster(), getRedisConfig());
-		//new JedisConnectionFactory(new RedisClusterConfiguration(Arrays.asList(redisClusterConfig.getNodes().split(","))));
-		return jedisConnectionFactory;
-	}
-	
+    /**
+     * 配置 Redis Cluster 信息
+     */
+    @Bean
+    public RedisClusterConfiguration getJedisCluster() {
+        RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration();
+        redisClusterConfiguration.setMaxRedirects(getRedisConfig().getMaxTotal());
+        List<RedisNode> nodeList = Lists.newArrayList();
+        Set<HostAndPort> nodes = redisClusterConfig.getRedisNods();
+        for (HostAndPort node : nodes) {
+            nodeList.add(new RedisNode(node.getHost(), node.getPort()));
+        }
+        redisClusterConfiguration.setClusterNodes(nodeList);
+        return redisClusterConfiguration;
+    }
+
+    /**
+     * 配置 Redis 连接工厂
+     */
+    @Bean(name = "jedisConnectionFactory")
+    public JedisConnectionFactory redisConnectionFactory() {
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(getJedisCluster(), getRedisConfig());
+        //new JedisConnectionFactory(new RedisClusterConfiguration(Arrays.asList(redisClusterConfig.getNodes().split(","))));
+        return jedisConnectionFactory;
+    }
+
 
 }
