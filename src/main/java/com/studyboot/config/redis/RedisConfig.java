@@ -47,7 +47,6 @@ public class RedisConfig {
 			nodeList.add(new RedisNode(node.getHost(), node.getPort()));
 		}
 		redisClusterConfiguration.setClusterNodes(nodeList);
-
 		return redisClusterConfiguration;
 	}
 

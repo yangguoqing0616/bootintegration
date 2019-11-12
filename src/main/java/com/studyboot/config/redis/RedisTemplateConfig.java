@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -21,9 +22,10 @@ public class RedisTemplateConfig {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         // 配置连接工厂
         template.setConnectionFactory(factory);
+
+        ObjectMapper om = new ObjectMapper();
         // 定义Jackson2JsonRedisSerializer序列化对象
         Jackson2JsonRedisSerializer<Object> jacksonSeial = new Jackson2JsonRedisSerializer<>(Object.class);
-        ObjectMapper om = new ObjectMapper();
         // 指定要序列化的域，field,get和set,以及修饰符范围，ANY是都有包括private和public
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         // 指定序列化输入的类型，类必须是非final修饰的，final修饰的类，比如String,Integer等会报异常
@@ -39,6 +41,28 @@ public class RedisTemplateConfig {
         // redis hash value 序列化方式使用jackson
         template.setHashValueSerializer(jacksonSeial);
         template.afterPropertiesSet();
+        return template;
+    }
+
+    /**
+     * 重新实现StringRedisTmeplate：键值都是String的的数据
+     * @param redisConnectionFactory
+     * @return
+     */
+    @Bean
+    public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        StringRedisTemplate template = new StringRedisTemplate();
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+        template.setConnectionFactory(redisConnectionFactory);
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+        // key采用String的序列化方式
+        template.setKeySerializer(stringRedisSerializer);
+        // hash的key采用String的序列化方式
+        template.setHashKeySerializer(stringRedisSerializer);
+        // value序列化方式采用jackson序列化方式
+        template.setValueSerializer(jackson2JsonRedisSerializer);
+        // hash的value序列化方式采用jackson序列化方式
+        template.setHashValueSerializer(jackson2JsonRedisSerializer);
         return template;
     }
 }
